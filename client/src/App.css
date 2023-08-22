@@ -116,25 +116,27 @@ form {
 .input-container {
   background-color: whitesmoke;
   height: 375px;
-  width: min(100% - 1rem);
+  width: min(100% - 2rem);
+  margin-inline: auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 10px;
+  padding: 8px;
 }
 .pw-output-container {
+  width: 90%;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }
 .pw-output {
   width: 100%;
   margin: 5px;
 }
 .checkbox-div {
-  width: 70%;
+  width: 80%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -146,4 +148,10 @@ form {
   justify-content: space-between;
   align-items: center;
   margin: 0.5rem;
+}
+.button-div {
+  width: 100%;
+  margin: 1rem;
+  display: flex;
+  justify-content: space-evenly;
 }

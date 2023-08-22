@@ -17,7 +17,9 @@ const Header = () => {
             edge="start"
             color="inherit"
             aria-label="menu"
-            sx={{ mr: 2 }}
+
+            //this comes back with the login button when the time is right
+            // sx={{ mr: 2 }}
           >
             <MenuIcon />
           </IconButton>
@@ -29,7 +31,7 @@ const Header = () => {
           >
             Password Generator
           </Typography>
-          <Button color="inherit">Login</Button>
+          {/* <Button color="inherit">Login</Button> */}
         </Toolbar>
       </AppBar>
     </Box>

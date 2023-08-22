@@ -1,8 +1,9 @@
 import { Box, Container } from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import { Button } from "@mui/material";
 import React from "react";
 
-const Main = ({ theme }) => {
+const Main = () => {
   return (
     <Container
       disableGutters
@@ -12,7 +13,7 @@ const Main = ({ theme }) => {
         height: "100%",
         width: "100%",
         justifyContent: "center",
-        my: 5,
+        my: 2,
       }}
     >
       <Box
@@ -62,6 +63,14 @@ const Main = ({ theme }) => {
                 <input type="checkbox" />
               </div>
             </div>
+            <div className="button-div">
+              <Button variant="contained" className="form-button">
+                Generate
+              </Button>
+              <Button variant="contained" className="form-button">
+                Save
+              </Button>
+            </div>
           </div>
         </form>
       </Box>
@@ -69,7 +78,7 @@ const Main = ({ theme }) => {
       <Box
         sx={{
           width: 350,
-          height: 500,
+          height: 400,
           backgroundColor: "secondary.main",
         }}
       ></Box>
