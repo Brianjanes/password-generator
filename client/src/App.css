@@ -103,3 +103,47 @@ h6 {
     transform: rotate(360deg);
   }
 }
+
+/* CSS for Inputs on PW generator */
+
+form {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.input-container {
+  background-color: whitesmoke;
+  height: 375px;
+  width: min(100% - 1rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}
+.pw-output-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+.pw-output {
+  width: 100%;
+  margin: 5px;
+}
+.checkbox-div {
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.checkbox-label-div {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0.5rem;
+}

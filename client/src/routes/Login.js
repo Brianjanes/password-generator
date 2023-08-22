@@ -1,7 +1,8 @@
+import { Container } from "@mui/material";
 import React from "react";
 
 const Login = () => {
-  return <div>Login</div>;
+  return <Container maxWidth="sm"></Container>;
 };
 
 export default Login;

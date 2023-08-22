@@ -24,33 +24,25 @@ const Footer = ({ theme }) => {
 
   return (
     <Box
+      component="footer"
       sx={{
-        display: "flex",
-        flexDirection: "column",
-        minHeight: "100vh",
+        py: 1.5,
+        px: 1,
+        // mt: "auto",
+        //trying out some colors here - not sure if final.
+        backgroundColor: theme.palette.secondary.main,
+        // backgroundColor: (theme) =>
+        //   theme.palette.mode === "light"
+        //     ? theme.palette.grey[200]
+        //     : theme.palette.grey[800],
       }}
     >
-      <Box
-        component="footer"
-        sx={{
-          py: 3,
-          px: 2,
-          mt: "auto",
-          //trying out some colors here - not sure if final.
-          backgroundColor: theme.palette.secondary.main,
-          // backgroundColor: (theme) =>
-          //   theme.palette.mode === "light"
-          //     ? theme.palette.grey[200]
-          //     : theme.palette.grey[800],
-        }}
-      >
-        <Container maxWidth="sm">
-          <Typography variant="body1">
-            Password Generator is a MERN stack application.
-          </Typography>
-          <Copyright />
-        </Container>
-      </Box>
+      <Container maxWidth="sm">
+        <Typography variant="body1">
+          Password Generator is a MERN stack application.
+        </Typography>
+        <Copyright />
+      </Container>
     </Box>
   );
 };

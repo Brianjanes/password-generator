@@ -4,14 +4,14 @@ import "./App.css";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Login from "./routes/Login";
-import Generator from "./routes/Generator";
+import Main from "./routes/Main";
 import { createTheme } from "@mui/material";
 import { ThemeProvider } from "@mui/material";
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#2B2F23", // primary color
+      main: "#565E45", // primary color
     },
     secondary: {
       main: "#F6E27F", // secondary color
@@ -25,10 +25,12 @@ const App = () => {
       <CssBaseline />
       <ThemeProvider theme={theme}>
         <Header theme={theme} />
+
         <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/generator" element={<Generator />} />
+          <Route path="/" element={<Login theme={theme} />} />
+          <Route path="/main" element={<Main theme={theme} />} />
         </Routes>
+
         <Footer theme={theme} />
       </ThemeProvider>
     </BrowserRouter>
