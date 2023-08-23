@@ -2,6 +2,7 @@
 const express = require("express");
 const morgan = require("morgan");
 const { auth } = require("express-openid-connect");
+const cors = require("cors");
 require("dotenv").config();
 
 const PORT = process.env.PORT || 8000;
@@ -22,6 +23,7 @@ app.use(express.static("public"));
 app.use(auth(config));
 app.use(morgan("tiny"));
 app.use(express.json());
+app.use(cors());
 
 // req.isAuthenticated is provided from the auth router
 app.get("/", (req, res) => {
