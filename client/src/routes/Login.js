@@ -1,17 +1,13 @@
 import { Container } from "@mui/material";
 import React from "react";
+import LoginButton from "../components/LoginButton";
+import LogoutButton from "../components/LogoutButton";
 
 const Login = () => {
   return (
     <Container maxWidth="sm">
-      <ul>
-        <li>
-          <a href="/login/">Login</a>
-        </li>
-        <li>
-          <a href="/logout/">Logout</a>
-        </li>
-      </ul>
+      <LoginButton />
+      <LogoutButton />
     </Container>
   );
 };
