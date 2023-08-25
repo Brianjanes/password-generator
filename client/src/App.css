@@ -105,13 +105,6 @@ h6 {
 
 /* CSS for Inputs on PW generator */
 
-form {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .input-container {
   background-color: whitesmoke;
   height: 375px;
@@ -126,9 +119,6 @@ form {
 .pw-name-input {
   width: 70%;
 }
-input[type="number"] {
-  width: auto;
-}
 .pw-output-container {
   width: 90%;
   display: flex;
@@ -139,6 +129,7 @@ input[type="number"] {
 .pw-output {
   width: 100%;
   margin: 5px;
+  padding: 0.5rem;
 }
 .checkbox-div {
   width: 80%;
@@ -147,7 +138,7 @@ input[type="number"] {
   justify-content: center;
   align-items: center;
 }
-.checkbox-label-div {
+.label-div {
   width: 100%;
   display: flex;
   justify-content: space-between;
