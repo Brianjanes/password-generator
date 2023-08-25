@@ -1,7 +1,6 @@
 import { Container } from "@mui/material";
 import React from "react";
-import LoginButton from "../components/LoginButton";
-import LogoutButton from "../components/LogoutButton";
+import AuthButton from "../components/AuthButton";
 import { useAuth0 } from "@auth0/auth0-react";
 
 const Login = () => {
@@ -9,16 +8,9 @@ const Login = () => {
 
   return (
     <Container maxWidth="sm">
-      <LoginButton />
-      <LogoutButton />
-      <div>
-        {user && (
-          <>
-            <p>{user.name}</p>
-            <p>{user.email}</p>
-          </>
-        )}
-      </div>
+      Maybe This is going to have something written here
+      <br />
+      <AuthButton />
     </Container>
   );
 };

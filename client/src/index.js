@@ -5,6 +5,7 @@ import { Auth0Provider } from "@auth0/auth0-react";
 
 const domain = process.env.REACT_APP_AUTH0_DOMAIN;
 const clientId = process.env.REACT_APP_AUTH0_CLIENT_ID;
+const redirectUri = "http://localhost:3000/main";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -13,7 +14,7 @@ root.render(
     domain={domain}
     clientId={clientId}
     authorizationParams={{
-      redirect_uri: window.location.origin,
+      redirect_uri: redirectUri,
     }}
   >
     <React.StrictMode>
