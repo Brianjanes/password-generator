@@ -9,6 +9,7 @@ import "../App.css";
 
 const Main = () => {
   const { register, handleSubmit } = useForm();
+  const [newPassword, setNewPassword] = useState(null);
 
   const onSubmit = async (data) => {
     console.log(data);
