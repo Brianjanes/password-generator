@@ -22,11 +22,24 @@ app.use(morgan("tiny"));
 app.use(express.json());
 app.use(cors());
 
+// Bringing in handlers.
+// ============================================================================
+
+const {
+  newUser,
+  savePassword,
+  deletePassword,
+  getPasswords,
+} = require("./handlers/Handlers");
+
 //Routes
 // ============================================================================
 app.get("/", (req, res) => {
   res.send("i farded");
 });
+
+app.post("/add-new-user", newUser);
+app.post("/add-new-password", savePassword);
 
 // This is our catch all endpoint.
 // ============================================================================

@@ -1,13 +1,14 @@
-import { Box, Container, Button } from "@mui/material";
+import { Box, Container, Button, Typography } from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { getRandomChar, getSpecialChar } from "../utils/utils";
 import useForm from "../utils/useForm";
 import { useAuth0 } from "@auth0/auth0-react";
+import WrongWay from "./WrongWay";
 
 const Main = () => {
-  const { user } = useAuth0();
+  const { user, isAuthenticated } = useAuth0();
   const [values, setValues] = useForm({
     labelFor: "",
     length: 8,
@@ -56,6 +57,11 @@ const Main = () => {
 
     if (generatedPassword) {
       setResult(generatedPassword);
+      console.log(
+        "password: " + result,
+        "user e-mail: " + user.email,
+        "password for: " + values.labelFor
+      );
     } else {
       toast.error("Please check at least one field");
     }
@@ -70,9 +76,75 @@ const Main = () => {
     }
   };
 
-  const handleSavePassword = () => {};
+  const handleSavePassword = (e) => {
+    e.preventDefault();
+    fetch("/add-new-password", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userEmail: user.email,
+        labelFor: values.labelFor,
+        password: result,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === 200) {
+          toast.success("Password saved successfully");
+        } else if (data.status === 500) {
+          toast.error("Failed to save password.");
+        }
+      });
+  };
 
-  return (
+  // const handleTest = (e) => {
+  //   e.preventDefault();
+  //   fetch("/add-new-user", {
+  //     method: "POST",
+  //     headers: {
+  //       Accept: "application/json",
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       userEmail: user?.email,
+  //     }),
+  //   })
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       if (!data.inDB) {
+  //         console.log("user already in DB");
+  //       }
+  //     });
+  // };
+
+  useEffect(() => {
+    // Check if user.email exists before making the fetch request
+    if (user?.email) {
+      fetch("/add-new-user", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userEmail: user.email,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (!data.inDB) {
+            console.log("user added to the DB");
+          }
+        });
+    }
+  }, [user?.email]);
+
+  return !isAuthenticated ? (
+    <WrongWay />
+  ) : (
     <Container
       disableGutters
       sx={{
@@ -186,7 +258,13 @@ const Main = () => {
             >
               Generate
             </Button>
-            <Button variant="contained" className="form-button">
+            <Button
+              onClick={(e) => {
+                handleSavePassword(e);
+              }}
+              variant="contained"
+              className="form-button"
+            >
               Save
             </Button>
           </div>
