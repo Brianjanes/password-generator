@@ -17,11 +17,49 @@ const usersCollection = db.collection("users");
 //================================================================
 const bcrypt = require("bcrypt");
 
+//This handler is getting a user by email
+//================================================================
+const getUserByEmail = async (request, response) => {
+  const { email } = request.params;
+  const newClient = new MongoClient(MONGO_URI, options);
+  const newDb = newClient.db("pw-generator-db");
+  const usersCollection = newDb.collection("users");
+  try {
+    await newClient.connect();
+    const user = await usersCollection.findOne({ email });
+    if (user) {
+      return response.status(200).json({
+        status: 200,
+        data: user,
+      });
+    } else if (!user) {
+      return response.status(404).json({
+        status: 404,
+        data: "User not found",
+      });
+    } else {
+      return response.status(500).json({
+        status: 500,
+        data: "Internal server error",
+      });
+    }
+  } catch (error) {
+    console.log("getUserByEmail handler Error: " + error);
+    return response.status(500).json({
+      status: 500,
+      message: "Internal Server Error",
+    });
+  } finally {
+    newClient.close();
+  }
+};
+
 //This handler fires when the user logs in and checks if the user already has an account.
 //================================================================
 const newUser = async (request, response) => {
   const { userEmail } = request.body;
   try {
+    await client.connect();
     const newUser = {
       email: userEmail,
       passwords: [],
@@ -40,12 +78,13 @@ const newUser = async (request, response) => {
           status: 502,
           message: "Database error.",
         });
+      } else {
+        return response.status(200).json({
+          status: 200,
+          message: "User added successfully.",
+          data: newUserResult,
+        });
       }
-      return response.status(200).json({
-        status: 200,
-        message: "User added successfully.",
-        data: newUserResult,
-      });
     }
   } catch (error) {
     console.log("newUser handler Error: " + error);
@@ -64,7 +103,7 @@ const savePassword = async (request, response) => {
   const { userEmail, labelFor, password } = request.body;
   try {
     await client.connect();
-    //make sure the user exists
+    //Make sure the user exists
     const user = await usersCollection.findOne({ email: userEmail });
     if (!user) {
       return response.status(404).json({
@@ -73,9 +112,9 @@ const savePassword = async (request, response) => {
       });
     } else {
       //Has the password using bcrypt
-      const hashedPassword = await bcrypt.hash(password, 10);
+      const hashedPassword = await bcrypt.hash(password, 13);
 
-      // Update the passwords array for the user
+      //Update the passwords array for the user
       const updatedUser = await usersCollection.updateOne(
         { email: userEmail },
         { $push: { passwords: { labelFor, password: hashedPassword } } }
@@ -134,4 +173,10 @@ const deletePassword = async (request, response) => {
   }
 };
 
-module.exports = { savePassword, getPasswords, deletePassword, newUser };
+module.exports = {
+  getUserByEmail,
+  savePassword,
+  getPasswords,
+  deletePassword,
+  newUser,
+};

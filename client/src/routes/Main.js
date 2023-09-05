@@ -1,13 +1,14 @@
 import { Box, Container, Button, Typography } from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import toast from "react-hot-toast";
 import { getRandomChar, getSpecialChar } from "../utils/utils";
 import useForm from "../utils/useForm";
 import { useAuth0 } from "@auth0/auth0-react";
-import WrongWay from "./WrongWay";
+import { UserContext } from "../utils/UserContext";
 
 const Main = () => {
+  const { loggedInUser } = useContext(UserContext);
   const { user, isAuthenticated } = useAuth0();
   const [values, setValues] = useForm({
     labelFor: "",
@@ -100,29 +101,9 @@ const Main = () => {
       });
   };
 
-  // const handleTest = (e) => {
-  //   e.preventDefault();
-  //   fetch("/add-new-user", {
-  //     method: "POST",
-  //     headers: {
-  //       Accept: "application/json",
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({
-  //       userEmail: user?.email,
-  //     }),
-  //   })
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       if (!data.inDB) {
-  //         console.log("user already in DB");
-  //       }
-  //     });
-  // };
-
   useEffect(() => {
     // Check if user.email exists before making the fetch request
-    if (user?.email) {
+    if (user) {
       fetch("/add-new-user", {
         method: "POST",
         headers: {
@@ -133,18 +114,22 @@ const Main = () => {
           userEmail: user.email,
         }),
       })
-        .then((response) => response.json())
-        .then((data) => {
-          if (!data.inDB) {
-            console.log("user added to the DB");
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
           }
+          return response.json();
+        })
+        .then((data) => {
+          console.log(data);
+        })
+        .catch((error) => {
+          console.error("Error adding user:", error);
         });
     }
-  }, [user?.email]);
+  }, [user]);
 
-  return !isAuthenticated ? (
-    <WrongWay />
-  ) : (
+  return (
     <Container
       disableGutters
       sx={{
@@ -280,7 +265,11 @@ const Main = () => {
             backgroundColor: "secondary.main",
           }}
         >
-          Loading...
+          <Typography variant="h6">
+            My life is nothing that I thought it would be and everything I was
+            worried it would become because for 50 seconds I thought there were
+            monsters on the world
+          </Typography>
         </Box>
       ) : (
         <Box
@@ -290,7 +279,8 @@ const Main = () => {
             backgroundColor: "secondary.main",
           }}
         >
-          {user?.email}
+          {/* {loggedInUser?.passwords[0].labelFor} :{" "}
+          {loggedInUser?.passwords[0].password} */}
         </Box>
       )}
     </Container>

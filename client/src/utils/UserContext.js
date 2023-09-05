@@ -11,7 +11,7 @@ export const UserProvider = ({ children }) => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      fetch(`users/${user.email}`)
+      fetch(`/users/${user.email}`)
         .then((response) => response.json())
         .then((data) => {
           console.log(data.data);

@@ -26,6 +26,7 @@ app.use(cors());
 // ============================================================================
 
 const {
+  getUserByEmail,
   newUser,
   savePassword,
   deletePassword,
@@ -38,6 +39,7 @@ app.get("/", (req, res) => {
   res.send("i farded");
 });
 
+app.get("/users/:email", getUserByEmail);
 app.post("/add-new-user", newUser);
 app.post("/add-new-password", savePassword);
 
