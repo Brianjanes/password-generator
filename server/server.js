@@ -40,6 +40,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/users/:email", getUserByEmail);
+app.get("/get-passwords/:email", getPasswords);
 app.post("/add-new-user", newUser);
 app.post("/add-new-password", savePassword);
 

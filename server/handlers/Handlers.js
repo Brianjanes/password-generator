@@ -92,8 +92,6 @@ const newUser = async (request, response) => {
       status: 500,
       message: "Internal Server Error",
     });
-  } finally {
-    client.close();
   }
 };
 
@@ -112,12 +110,12 @@ const savePassword = async (request, response) => {
       });
     } else {
       //Has the password using bcrypt
-      const hashedPassword = await bcrypt.hash(password, 13);
+      // const hashedPassword = await bcrypt.hash(password, 13);
 
       //Update the passwords array for the user
       const updatedUser = await usersCollection.updateOne(
         { email: userEmail },
-        { $push: { passwords: { labelFor, password: hashedPassword } } }
+        { $push: { passwords: { labelFor, password } } }
       );
 
       if (!updatedUser.modifiedCount) {
@@ -146,8 +144,17 @@ const savePassword = async (request, response) => {
 //This handler returns all of the users saved passwords to be displayed on their dashboard.
 //============================================================================================
 const getPasswords = async (request, response) => {
+  const { email } = request.params;
   try {
     await client.connect();
+
+    const user = await usersCollection.findOne({ email: email });
+    if (user) {
+      return response.status(200).json({
+        status: 200,
+        data: user.passwords,
+      });
+    }
   } catch (error) {
     console.log("getPasswords handler Error :" + error.message);
     return response.status(500).json({

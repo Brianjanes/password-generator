@@ -9,6 +9,7 @@ import { UserContext } from "../utils/UserContext";
 
 const Main = () => {
   const { loggedInUser } = useContext(UserContext);
+  const [savedPasswords, setSavedPasswords] = useState([]);
   const { user, isAuthenticated } = useAuth0();
   const [values, setValues] = useForm({
     labelFor: "",
@@ -126,8 +127,21 @@ const Main = () => {
         .catch((error) => {
           console.error("Error adding user:", error);
         });
+      fetch(`/get-passwords/${user.email}`)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          console.log(data);
+        })
+        .catch((error) => {
+          console.error("Error fetching passwords:" + error);
+        });
     }
-  }, [user]);
+  }, [user, loggedInUser]);
 
   return (
     <Container
