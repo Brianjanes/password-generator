@@ -7,11 +7,12 @@ import { getRandomChar, getSpecialChar } from "../utils/utils";
 import useForm from "../utils/useForm";
 import { useAuth0 } from "@auth0/auth0-react";
 import { UserContext } from "../utils/UserContext";
+import ScaleLoader from "react-spinners/ScaleLoader";
 
 const Main = () => {
   const { loggedInUser } = useContext(UserContext);
   const [savedPasswords, setSavedPasswords] = useState([]);
-  const { user } = useAuth0();
+  const { user, isLoading } = useAuth0();
   const [values, setValues] = useForm({
     labelFor: "",
     length: 8,
@@ -144,6 +145,10 @@ const Main = () => {
     }
   }, [user, loggedInUser]);
 
+  const handleDelete = (e) => {
+    e.preventDefault();
+  };
+
   return (
     <Container
       disableGutters
@@ -272,7 +277,7 @@ const Main = () => {
         </form>
       </Box>
 
-      {!user ? (
+      {isLoading ? (
         <Box
           sx={{
             width: 350,
@@ -283,7 +288,9 @@ const Main = () => {
             alignItems: "center",
           }}
         >
-          <Typography variant="h6">Not logged in</Typography>
+          <div className="loading">
+            <ScaleLoader />
+          </div>
         </Box>
       ) : (
         <Box
@@ -299,15 +306,15 @@ const Main = () => {
           <div className="saved-passwords">
             {savedPasswords.map((entry, index) => (
               <div key={index} className="password-card">
-                <Typography variant="h6" className="icon-div">
+                <Typography variant="body1" className="icon-div">
                   <div>
                     <strong>Password for</strong>: {entry.labelFor}
                   </div>
                   <DeleteIcon sx={{ margin: 0.5, cursor: "pointer" }} />
                 </Typography>
-                <Typography variant="h6" sx={{ margin: 0.5 }}>
+                <Typography variant="body1">
                   <div className="icon-div">
-                    <p>{entry.password}</p>
+                    <span className="password">{entry.password}</span>
                     <ContentCopyIcon sx={{ margin: 0.5, cursor: "pointer" }} />
                   </div>
                 </Typography>
