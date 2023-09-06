@@ -1,5 +1,6 @@
 import { Box, Container, Button, Typography } from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import DeleteIcon from "@mui/icons-material/Delete";
 import React, { useEffect, useState, useContext } from "react";
 import toast from "react-hot-toast";
 import { getRandomChar, getSpecialChar } from "../utils/utils";
@@ -10,7 +11,7 @@ import { UserContext } from "../utils/UserContext";
 const Main = () => {
   const { loggedInUser } = useContext(UserContext);
   const [savedPasswords, setSavedPasswords] = useState([]);
-  const { user, isAuthenticated } = useAuth0();
+  const { user } = useAuth0();
   const [values, setValues] = useForm({
     labelFor: "",
     length: 8,
@@ -59,11 +60,11 @@ const Main = () => {
 
     if (generatedPassword) {
       setResult(generatedPassword);
-      console.log(
-        "password: " + result,
-        "user e-mail: " + user.email,
-        "password for: " + values.labelFor
-      );
+      console.log({
+        "new password": result,
+        "user e-mail": user?.email,
+        "password for": values.labelFor,
+      });
     } else {
       toast.error("Please check at least one field");
     }
@@ -122,7 +123,7 @@ const Main = () => {
           return response.json();
         })
         .then((data) => {
-          console.log(data);
+          console.log(data.message);
         })
         .catch((error) => {
           console.error("Error adding user:", error);
@@ -135,7 +136,7 @@ const Main = () => {
           return response.json();
         })
         .then((data) => {
-          console.log(data);
+          setSavedPasswords(data.data);
         })
         .catch((error) => {
           console.error("Error fetching passwords:" + error);
@@ -277,13 +278,12 @@ const Main = () => {
             width: 350,
             height: 400,
             backgroundColor: "secondary.main",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
           }}
         >
-          <Typography variant="h6">
-            My life is nothing that I thought it would be and everything I was
-            worried it would become because for 50 seconds I thought there were
-            monsters on the world
-          </Typography>
+          <Typography variant="h6">Not logged in</Typography>
         </Box>
       ) : (
         <Box
@@ -291,10 +291,29 @@ const Main = () => {
             width: 350,
             height: 400,
             backgroundColor: "secondary.main",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
           }}
         >
-          {/* {loggedInUser?.passwords[0].labelFor} :{" "}
-          {loggedInUser?.passwords[0].password} */}
+          <div className="saved-passwords">
+            {savedPasswords.map((entry, index) => (
+              <div key={index} className="password-card">
+                <Typography variant="h6" className="icon-div">
+                  <div>
+                    <strong>Password for</strong>: {entry.labelFor}
+                  </div>
+                  <DeleteIcon sx={{ margin: 0.5, cursor: "pointer" }} />
+                </Typography>
+                <Typography variant="h6" sx={{ margin: 0.5 }}>
+                  <div className="icon-div">
+                    <p>{entry.password}</p>
+                    <ContentCopyIcon sx={{ margin: 0.5, cursor: "pointer" }} />
+                  </div>
+                </Typography>
+              </div>
+            ))}
+          </div>
         </Box>
       )}
     </Container>

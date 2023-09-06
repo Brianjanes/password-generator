@@ -15,7 +15,11 @@ const usersCollection = db.collection("users");
 
 //Using bcrypt to hash passwords before they get to the DB.
 //================================================================
-const bcrypt = require("bcrypt");
+// const bcrypt = require("bcrypt");\
+
+//Using uuid to generate unique IDs for each password/label pair.
+//================================================================
+const { v4: uuidv4 } = require("uuid");
 
 //This handler is getting a user by email
 //================================================================
@@ -112,10 +116,14 @@ const savePassword = async (request, response) => {
       //Has the password using bcrypt
       // const hashedPassword = await bcrypt.hash(password, 13);
 
-      //Update the passwords array for the user
+      //Create a new uuid id
+      //================================================================
+      const newId = uuidv4();
+
+      //Update the passwords array for the user with the incoming label, password, and uuid.
       const updatedUser = await usersCollection.updateOne(
         { email: userEmail },
-        { $push: { passwords: { labelFor, password } } }
+        { $push: { passwords: { labelFor, password, id: newId } } }
       );
 
       if (!updatedUser.modifiedCount) {
@@ -161,12 +169,12 @@ const getPasswords = async (request, response) => {
       status: 500,
       message: "Internal server error.",
     });
-  } finally {
-    client.close();
   }
 };
 
 const deletePassword = async (request, response) => {
+  const { id } = request.params;
+  const { email } = request.body;
   try {
     await client.connect();
   } catch (error) {
