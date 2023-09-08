@@ -43,6 +43,7 @@ app.get("/users/:email", getUserByEmail);
 app.get("/get-passwords/:email", getPasswords);
 app.post("/add-new-user", newUser);
 app.post("/add-new-password", savePassword);
+app.delete("/delete-password/:id", deletePassword);
 
 // This is our catch all endpoint.
 // ============================================================================

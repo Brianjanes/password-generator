@@ -172,11 +172,46 @@ const getPasswords = async (request, response) => {
   }
 };
 
+//This is to delete a oassword from the DB
+//============================================================
 const deletePassword = async (request, response) => {
   const { id } = request.params;
   const { email } = request.body;
   try {
     await client.connect();
+
+    const findEmail = await usersCollection.findOne({ email: email });
+
+    // Use projection to filter the passwords array by id
+    const deleteRequest = await usersCollection.findOne(
+      { email: email, "passwords.id": id },
+      { projection: { "passwords.$": 1 } }
+    );
+    console.log(deleteRequest);
+
+    if (deleteRequest) {
+      const deletedPassword = deleteRequest.passwords[0]; // Access the first (and only) matching password
+      console.log(deletedPassword);
+
+      // Now, you can perform your delete operation if needed.
+      // For example, if you want to remove the password with the specified id:
+      const checkDelete = await usersCollection.updateOne(
+        { email: email },
+        { $pull: { passwords: { id: id } } }
+      );
+      if (checkDelete.acknowledged) {
+        return response.status(200).json({
+          status: 200,
+          message: "Password found and accessed successfully.",
+          password: deletedPassword,
+        });
+      } else {
+        return response.status(404).json({
+          status: 404,
+          message: "Password not found.",
+        });
+      }
+    }
   } catch (error) {
     console.log("deletePassword handler Error :" + error.message);
     return response.status(500).json({

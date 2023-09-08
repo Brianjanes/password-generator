@@ -12,13 +12,14 @@ import ScaleLoader from "react-spinners/ScaleLoader";
 const Main = () => {
   const { loggedInUser } = useContext(UserContext);
   const [savedPasswords, setSavedPasswords] = useState([]);
+  const [refresh, setRefresh] = useState(false);
   const { user, isLoading } = useAuth0();
   const [values, setValues] = useForm({
     labelFor: "",
     length: 8,
-    upperCase: false,
+    upperCase: true,
     lowerCase: false,
-    number: false,
+    number: true,
     symbol: false,
   });
   const [result, setResult] = useState("");
@@ -98,6 +99,17 @@ const Main = () => {
       .then((data) => {
         if (data.status === 200) {
           toast.success("Password saved successfully");
+          setRefresh(!refresh);
+          setResult("");
+          // Reset the form fields to their initial state
+          setValues({
+            labelFor: "",
+            length: 8,
+            upperCase: true,
+            lowerCase: false,
+            number: true,
+            symbol: false,
+          });
         } else if (data.status === 500) {
           toast.error("Failed to save password.");
         }
@@ -143,10 +155,30 @@ const Main = () => {
           console.error("Error fetching passwords:" + error);
         });
     }
-  }, [user, loggedInUser]);
+  }, [user, loggedInUser, refresh]);
 
-  const handleDelete = (e) => {
+  const handleDelete = (e, id) => {
     e.preventDefault();
+
+    fetch(`/delete-password/${id}`, {
+      method: "DELETE",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: loggedInUser.email,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === 200) {
+          setRefresh(!refresh);
+          toast.success("Password deleted successfully.");
+        } else if (data.status === 404) {
+          toast.error("Password not found.");
+        }
+      });
   };
 
   return (
@@ -169,6 +201,7 @@ const Main = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          borderRadius: 1,
         }}
       >
         {/* this is a form */}
@@ -286,6 +319,7 @@ const Main = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
+            borderRadius: 1,
           }}
         >
           <div className="loading">
@@ -301,18 +335,22 @@ const Main = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
+            borderRadius: 1,
           }}
         >
           <div className="saved-passwords">
             {savedPasswords.map((entry, index) => (
               <div key={index} className="password-card">
-                <Typography variant="body1" className="icon-div">
+                <Typography variant="h6" className="icon-div">
                   <div>
-                    <strong>Password for</strong>: {entry.labelFor}
+                    <strong>Password for:</strong> {entry.labelFor}
                   </div>
-                  <DeleteIcon sx={{ margin: 0.5, cursor: "pointer" }} />
+                  <DeleteIcon
+                    sx={{ margin: 0.5, cursor: "pointer" }}
+                    onClick={(e) => handleDelete(e, entry.id)}
+                  />
                 </Typography>
-                <Typography variant="body1">
+                <Typography variant="h6">
                   <div className="icon-div">
                     <span className="password">{entry.password}</span>
                     <ContentCopyIcon sx={{ margin: 0.5, cursor: "pointer" }} />
