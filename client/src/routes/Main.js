@@ -207,7 +207,7 @@ const Main = () => {
               className="pw-output"
               value={result}
             />
-            <div onClick={handleCopyPassword}>
+            <div onClick={() => handleCopyPassword(result)}>
               <ContentCopyIcon sx={{ margin: 0.5, cursor: "pointer" }} />
             </div>
           </div>
