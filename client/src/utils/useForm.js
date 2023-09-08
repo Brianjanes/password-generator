@@ -3,6 +3,10 @@ import { useState } from "react";
 export default function useForm(initialValues) {
   const [values, setValues] = useState(initialValues);
 
+  const resetForm = () => {
+    setValues(initialValues);
+  };
+
   return [
     values,
     (e) => {
@@ -12,21 +16,6 @@ export default function useForm(initialValues) {
           e.target.type === "checkbox" ? e.target.checked : e.target.value,
       });
     },
+    resetForm,
   ];
 }
-
-// import { useState } from "react";
-
-// export default function useForm(initialValues) {
-//   const [values, setValues] = useState(initialValues);
-
-//   const handleChange = (e) => {
-//     setValues({
-//       ...values,
-//       [e.target.name]:
-//         e.target.type === "checkbox" ? e.target.checked : e.target.value,
-//     });
-//   };
-
-//   return [values, handleChange];
-// }

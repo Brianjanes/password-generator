@@ -14,7 +14,7 @@ const Main = () => {
   const [savedPasswords, setSavedPasswords] = useState([]);
   const [refresh, setRefresh] = useState(false);
   const { user, isLoading } = useAuth0();
-  const [values, setValues] = useForm({
+  const [values, setValues, resetForm] = useForm({
     labelFor: "",
     length: 8,
     upperCase: true,
@@ -72,7 +72,7 @@ const Main = () => {
     }
   };
 
-  const handleCopyPassword = async () => {
+  const handleCopyPassword = async (result) => {
     if (result) {
       await navigator.clipboard.writeText(result);
       toast.success("Copied to your clipboard!");
@@ -100,16 +100,9 @@ const Main = () => {
         if (data.status === 200) {
           toast.success("Password saved successfully");
           setRefresh(!refresh);
+          // Reset the form after saving the password
+          resetForm();
           setResult("");
-          // Reset the form fields to their initial state
-          setValues({
-            labelFor: "",
-            length: 8,
-            upperCase: true,
-            lowerCase: false,
-            number: true,
-            symbol: false,
-          });
         } else if (data.status === 500) {
           toast.error("Failed to save password.");
         }
@@ -353,7 +346,10 @@ const Main = () => {
                 <Typography variant="h6">
                   <div className="icon-div">
                     <span className="password">{entry.password}</span>
-                    <ContentCopyIcon sx={{ margin: 0.5, cursor: "pointer" }} />
+                    <ContentCopyIcon
+                      sx={{ margin: 0.5, cursor: "pointer" }}
+                      onClick={() => handleCopyPassword(entry.password)}
+                    />
                   </div>
                 </Typography>
               </div>

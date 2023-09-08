@@ -13,10 +13,6 @@ const client = new MongoClient(MONGO_URI, options);
 const db = client.db("pw-generator-db");
 const usersCollection = db.collection("users");
 
-//Using bcrypt to hash passwords before they get to the DB.
-//================================================================
-// const bcrypt = require("bcrypt");\
-
 //Using uuid to generate unique IDs for each password/label pair.
 //================================================================
 const { v4: uuidv4 } = require("uuid");
@@ -113,9 +109,6 @@ const savePassword = async (request, response) => {
         message: "User not found.",
       });
     } else {
-      //Has the password using bcrypt
-      // const hashedPassword = await bcrypt.hash(password, 13);
-
       //Create a new uuid id
       //================================================================
       const newId = uuidv4();
@@ -150,7 +143,7 @@ const savePassword = async (request, response) => {
 };
 
 //This handler returns all of the users saved passwords to be displayed on their dashboard.
-//============================================================================================
+//============================================================================
 const getPasswords = async (request, response) => {
   const { email } = request.params;
   try {
@@ -172,7 +165,7 @@ const getPasswords = async (request, response) => {
   }
 };
 
-//This is to delete a oassword from the DB
+//This is to delete a password from the DB
 //============================================================
 const deletePassword = async (request, response) => {
   const { id } = request.params;
@@ -187,12 +180,9 @@ const deletePassword = async (request, response) => {
       { email: email, "passwords.id": id },
       { projection: { "passwords.$": 1 } }
     );
-    console.log(deleteRequest);
 
     if (deleteRequest) {
       const deletedPassword = deleteRequest.passwords[0]; // Access the first (and only) matching password
-      console.log(deletedPassword);
-
       // Now, you can perform your delete operation if needed.
       // For example, if you want to remove the password with the specified id:
       const checkDelete = await usersCollection.updateOne(
