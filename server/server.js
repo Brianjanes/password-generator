@@ -12,15 +12,19 @@ require("dotenv").config();
 const app = express();
 const PORT = process.env.PORT || 8000;
 
+//CORS
+// ============================================================================
+app.use(cors());
+
 // Any requests for static files will go into the public folder
 // ============================================================================
 app.use(express.static("public"));
 
 // Setting up Express.
 // ============================================================================
+
 app.use(morgan("tiny"));
 app.use(express.json());
-app.use(cors());
 
 // Bringing in handlers.
 // ============================================================================

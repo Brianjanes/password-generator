@@ -10,17 +10,35 @@ const Login = () => {
 
   if (!user) {
     return (
-      isLoading && (
-        <Container maxWidth="sm">
-          <Box>
-            <Typography variant="h2">
-              Welcome to my little password generator web app
-            </Typography>
-          </Box>
-          <br />
-          <AuthButton />
-        </Container>
-      )
+      <Container
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+          height: "100%",
+          width: "100%",
+          justifyContent: "center",
+          alignItems: "center",
+          my: 2,
+        }}
+      >
+        <Box
+          sx={{
+            width: 350,
+            height: 400,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            borderRadius: 1,
+          }}
+        >
+          <Typography variant="h5">
+            Welcome to my little password generator web app
+          </Typography>
+        </Box>
+        <br />
+        <AuthButton />
+      </Container>
     );
   } else {
     navigate("/main");

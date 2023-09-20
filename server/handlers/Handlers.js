@@ -21,11 +21,11 @@ const { v4: uuidv4 } = require("uuid");
 //================================================================
 const getUserByEmail = async (request, response) => {
   const { email } = request.params;
-  const newClient = new MongoClient(MONGO_URI, options);
-  const newDb = newClient.db("pw-generator-db");
-  const usersCollection = newDb.collection("users");
+  // const newClient = new MongoClient(MONGO_URI, options);
+  // const newDb = newClient.db("pw-generator-db");
+  // const usersCollection = newDb.collection("users");
   try {
-    await newClient.connect();
+    await client.connect();
     const user = await usersCollection.findOne({ email });
     if (user) {
       return response.status(200).json({
