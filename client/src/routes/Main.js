@@ -1,9 +1,10 @@
 import { Box, Container, Button, Typography } from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import DeleteIcon from "@mui/icons-material/Delete";
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useCallback } from "react";
 import toast from "react-hot-toast";
 import { getRandomChar, getSpecialChar } from "../utils/utils";
+import CheckboxInput from "../components/CheckboxInput";
 import useForm from "../utils/useForm";
 import { useAuth0 } from "@auth0/auth0-react";
 import { UserContext } from "../utils/UserContext";
@@ -43,71 +44,77 @@ const Main = () => {
     },
   ];
 
-  const handleGeneratePassword = (e) => {
-    e.preventDefault();
+  const handleGeneratePassword = useCallback(
+    (e) => {
+      e.preventDefault();
 
-    let generatedPassword = "";
+      let generatedPassword = "";
 
-    const checkedFields = fieldsArray.filter(({ field }) => field);
+      const checkedFields = fieldsArray.filter(({ field }) => field);
 
-    for (let i = 0; i < values.length; i++) {
-      const index = Math.floor(Math.random() * checkedFields.length);
+      for (let i = 0; i < values.length; i++) {
+        const index = Math.floor(Math.random() * checkedFields.length);
 
-      const letter = checkedFields[index]?.getChar();
+        const letter = checkedFields[index]?.getChar();
 
-      if (letter) {
-        generatedPassword += letter;
+        if (letter) {
+          generatedPassword += letter;
+        }
       }
-    }
 
-    if (generatedPassword) {
-      setResult(generatedPassword);
-      console.log({
-        "new password": result,
-        "user e-mail": user?.email,
-        "password for": values.labelFor,
-      });
-    } else {
-      toast.error("Please check at least one field");
-    }
-  };
+      if (generatedPassword) {
+        setResult(generatedPassword);
+        console.log({
+          "new password": result,
+          "user e-mail": user?.email,
+          "password for": values.labelFor,
+        });
+      } else {
+        toast.error("Please check at least one field");
+      }
+    },
+    [values]
+  );
 
-  const handleCopyPassword = async (result) => {
+  const handleCopyPassword = useCallback(async (result) => {
     if (result) {
       await navigator.clipboard.writeText(result);
       toast.success("Copied to your clipboard!");
     } else {
       toast.error("No password to copy.");
     }
-  };
+  }, []);
 
-  const handleSavePassword = (e) => {
-    e.preventDefault();
-    fetch("/add-new-password", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        userEmail: user.email,
-        labelFor: values.labelFor,
-        password: result,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.status === 200) {
-          toast.success("Password saved successfully");
-          setRefresh(!refresh);
-          // Reset the form after saving the password
-          resetForm();
-          setResult("");
-        } else if (data.status === 500) {
-          toast.error("Failed to save password.");
-        }
-      });
-  };
+  const handleSavePassword = useCallback(
+    (e) => {
+      e.preventDefault();
+      fetch("/add-new-password", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userEmail: user.email,
+          labelFor: values.labelFor,
+          password: result,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.status === 200) {
+            toast.success("Password saved successfully");
+            setRefresh(!refresh);
+            // Reset the form after saving the password
+            resetForm();
+            setResult("");
+          } else if (data.status === 500) {
+            toast.error("Failed to save password.");
+          }
+        });
+    },
+    [user, values, result, refresh]
+  );
 
   useEffect(() => {
     // Check if user.email exists before making the fetch request
@@ -268,7 +275,14 @@ const Main = () => {
               />
             </div>
 
-            <div className="label-div">
+            <CheckboxInput
+              id="symbol"
+              name="symbol"
+              checked={values.symbol}
+              onChange={setValues}
+            />
+
+            {/* <div className="label-div">
               <label htmlFor="symbol"> Symbol:</label>
               <input
                 type="checkbox"
@@ -277,7 +291,7 @@ const Main = () => {
                 checked={values.symbol}
                 onChange={setValues}
               />
-            </div>
+            </div> */}
           </div>
           <div className="button-div">
             <Button
@@ -335,8 +349,8 @@ const Main = () => {
             {savedPasswords.map((entry, index) => (
               <div key={index} className="password-card">
                 <Typography variant="h6" className="icon-div">
-                  <div>
-                    <strong>Password for:</strong> {entry.labelFor}
+                  <div className="labelDiv">
+                    <div className="bold">Password for:</div> {entry.labelFor}
                   </div>
                   <DeleteIcon
                     sx={{ margin: 0.5, cursor: "pointer" }}

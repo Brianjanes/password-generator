@@ -39,9 +39,6 @@ const {
 
 //Routes
 // ============================================================================
-app.get("/", (req, res) => {
-  res.send("i farded");
-});
 
 app.get("/users/:email", getUserByEmail);
 app.get("/get-passwords/:email", getPasswords);

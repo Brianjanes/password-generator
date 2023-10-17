@@ -21,9 +21,6 @@ const { v4: uuidv4 } = require("uuid");
 //================================================================
 const getUserByEmail = async (request, response) => {
   const { email } = request.params;
-  // const newClient = new MongoClient(MONGO_URI, options);
-  // const newDb = newClient.db("pw-generator-db");
-  // const usersCollection = newDb.collection("users");
   try {
     await client.connect();
     const user = await usersCollection.findOne({ email });
@@ -50,7 +47,7 @@ const getUserByEmail = async (request, response) => {
       message: "Internal Server Error",
     });
   } finally {
-    newClient.close();
+    client.close();
   }
 };
 

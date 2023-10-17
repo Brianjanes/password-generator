@@ -198,3 +198,12 @@ strong {
   justify-content: center;
   align-items: center;
 }
+.labelDiv {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+.bold {
+  font-weight: bold;
+  padding: 5px;
+}

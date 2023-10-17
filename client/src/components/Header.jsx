@@ -23,7 +23,7 @@ const Header = () => {
             //this comes back with the login button when the time is right
             // sx={{ mr: 2 }}
           >
-            <MenuIcon />
+            {/* <MenuIcon /> */}
           </IconButton>
           <Typography
             variant="h5"
